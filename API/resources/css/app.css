@@ -1,0 +1,58 @@
+@import "../vendor/fontawesome-free/css/all.min.css";
+@import "./sb-admin-2.min.css";
+.c-sliding-pagination {
+    pointer-events: all;
+}
+.c-sliding-pagination__list {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+.c-sliding-pagination__list-element {
+    display: inline-block;
+    background: #246068;
+    color: #fff;
+    padding: 0.6em;
+    border-radius: 0.2em;
+    margin: 0;
+    margin-right: 0.2em;
+    margin-bottom: 1em;
+    transition-duration: 300ms;
+    transition-property: background, color;
+}
+.c-sliding-pagination__list-element:hover {
+    transition-duration: 300ms;
+    transition-property: background, color;
+    color: #e9e9e9;
+    background: #69969c;
+}
+.c-sliding-pagination__list-element:last-of-type {
+    margin-right: 0;
+}
+.c-sliding-pagination__list-element--active {
+    background: #69969c;
+    color: #e9e9e9;
+}
+.c-sliding-pagination__list-element--active:hover {
+    color: #fff;
+    background: #246068;
+    cursor: default;
+}
+.c-sliding-pagination__list-element--disabled {
+    background: none;
+    color: inherit;
+    cursor: not-allowed;
+}
+.c-sliding-pagination__page {
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+.c-sliding-pagination__page[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.c-sliding-pagination__list > li {
+    margin: 0px !important;
+}

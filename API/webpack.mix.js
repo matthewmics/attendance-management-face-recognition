@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,7 +11,12 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
+mix.autoload({ jquery: ["$", "jQuery", "window.jQuery"] });
+mix.js("resources/js/app.js", "public/js")
+    .js("resources/vendor/bootstrap/js/bootstrap.bundle.min.js", "public/js")
+    .js("resources/vendor/jquery-easing/jquery.easing.min.js", "public/js")
+    .js("resources/js/sb-admin-2.min.js", "public/js")
+    .vue()
+    .postCss("resources/css/app.css", "public/css", [
         //
     ]);

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -38,4 +39,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::resource('buildings', BuildingController::class);
     Route::get('/buildings/search/{name}', [BuildingController::class, 'search']);
+
+    Route::resource('app-users', AppUserController::class);
 });

@@ -1,0 +1,19 @@
+import agent from "../../agent";
+import { getToken, setToken, clearToken } from "../../helpers";
+import { router } from "../../app";
+
+
+const state = {};
+
+const getters = {};
+
+const actions = {};
+
+const mutations = {};
+
+export default {
+  state,
+  getters,
+  actions,
+  mutations,
+};
