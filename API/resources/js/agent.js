@@ -43,9 +43,14 @@ const AppUser = {
     list: (page) => requests.get(`/app-users?page=${page}`),
 };
 
+const AttendanceLog = {
+    list: (page) => requests.get(`/attendance-log?page=${page}`),
+};
+
 const agent = {
     User,
     AppUser,
+    AttendanceLog,
 };
 
 export default agent;

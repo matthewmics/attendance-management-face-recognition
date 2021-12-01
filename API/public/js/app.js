@@ -2076,6 +2076,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue_sliding_pagination__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-sliding-pagination */ "./node_modules/vue-sliding-pagination/dist/vue-sliding-pagination.umd.js");
+/* harmony import */ var vue_sliding_pagination__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_sliding_pagination__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers */ "./resources/js/helpers.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2102,7 +2112,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      currentPage: 1,
+      totalPage: 1
+    };
+  },
+  components: {
+    SlidingPagination: (vue_sliding_pagination__WEBPACK_IMPORTED_MODULE_0___default())
+  },
+  methods: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapActions)(["fetchAttendanceLogs"])), {}, {
+    dateStringToLocal: _helpers__WEBPACK_IMPORTED_MODULE_1__.dateStringToLocal,
+    loadAttendanceLogsPagination: function loadAttendanceLogsPagination(page) {
+      var _this = this;
+
+      this.fetchAttendanceLogs(page).then(function () {
+        _this.currentPage = page;
+        _this.totalPage = _this.paginationAttendanceLogs.last_page;
+      });
+    },
+    pageChanged: function pageChanged(page) {
+      this.loadAttendanceLogsPagination(page);
+    }
+  }),
+  computed: (0,vuex__WEBPACK_IMPORTED_MODULE_2__.mapGetters)(["paginationAttendanceLogs"]),
+  created: function created() {
+    this.loadAttendanceLogsPagination(this.currentPage);
+  }
+});
 
 /***/ }),
 
@@ -3023,7 +3077,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       currentPage: 1,
-      totalPage: 0
+      totalPage: 1
     };
   },
   components: {
@@ -3170,9 +3224,15 @@ var AppUser = {
     return requests.get("/app-users?page=".concat(page));
   }
 };
+var AttendanceLog = {
+  list: function list(page) {
+    return requests.get("/attendance-log?page=".concat(page));
+  }
+};
 var agent = {
   User: User,
-  AppUser: AppUser
+  AppUser: AppUser,
+  AttendanceLog: AttendanceLog
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (agent);
 
@@ -3329,21 +3389,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _modules_authStore_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/authStore.js */ "./resources/js/store/modules/authStore.js");
 /* harmony import */ var _modules_appUserStore_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/appUserStore.js */ "./resources/js/store/modules/appUserStore.js");
+/* harmony import */ var _modules_attendanceLogStore_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/attendanceLogStore.js */ "./resources/js/store/modules/attendanceLogStore.js");
+
 
 
 
  // Load Vuex
 
-vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3__["default"]); // Create store
+vue__WEBPACK_IMPORTED_MODULE_3__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_4__["default"]); // Create store
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_4__["default"].Store({
   modules: {
     authStore: _modules_authStore_js__WEBPACK_IMPORTED_MODULE_0__["default"],
-    appUserStore: _modules_appUserStore_js__WEBPACK_IMPORTED_MODULE_1__["default"]
+    appUserStore: _modules_appUserStore_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+    attendanceLogStore: _modules_attendanceLogStore_js__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 }));
 
@@ -3431,6 +3494,99 @@ var mutations = {
   },
   setPaginationAppUser: function setPaginationAppUser(state, val) {
     return state.paginationAppUser = val;
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/attendanceLogStore.js":
+/*!**********************************************************!*\
+  !*** ./resources/js/store/modules/attendanceLogStore.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _agent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../agent */ "./resources/js/agent.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers */ "./resources/js/helpers.js");
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
+var state = {
+  paginationAttendanceLogs: null,
+  attendanceLogsLoading: false
+};
+var getters = {
+  paginationAttendanceLogs: function paginationAttendanceLogs(state) {
+    return state.paginationAttendanceLogs;
+  },
+  attendanceLogsLoading: function attendanceLogsLoading(state) {
+    return state.attendanceLogsLoading;
+  }
+};
+var actions = {
+  fetchAttendanceLogs: function fetchAttendanceLogs(_ref, page) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+      var commit, response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              commit = _ref.commit;
+              commit("setAttendanceLogsLoading", true);
+              _context.prev = 2;
+              _context.next = 5;
+              return _agent__WEBPACK_IMPORTED_MODULE_1__["default"].AttendanceLog.list(page);
+
+            case 5:
+              response = _context.sent;
+              commit("setPaginationAttendanceLogs", response);
+              _context.next = 12;
+              break;
+
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](2);
+              console.log(_context.t0);
+
+            case 12:
+              _context.prev = 12;
+              commit("setAttendanceLogsLoading", false);
+              return _context.finish(12);
+
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[2, 9, 12, 15]]);
+    }))();
+  }
+};
+var mutations = {
+  setAttendanceLogsLoading: function setAttendanceLogsLoading(state, val) {
+    return state.attendanceLogsLoading = val;
+  },
+  setPaginationAttendanceLogs: function setPaginationAttendanceLogs(state, val) {
+    return state.paginationAttendanceLogs = val;
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -3696,7 +3852,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.center-screen {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  text-align: center;\r\n  min-height: 100vh;\n}\n.c-sliding-pagination__list-element {\r\n  background: white;\r\n  font-size: 14px;\n}\n.c-sliding-pagination__list-element a {\r\n  color: black !important;\r\n  padding: 12px;\n}\n.c-sliding-pagination__list-element:hover {\r\n  background: #e1f5fe;\n}\n.c-sliding-pagination__list-element.c-sliding-pagination__list-element--active {\r\n  background: #9c27b0;\n}\n.c-sliding-pagination__list-element.c-sliding-pagination__list-element--active\r\n  a {\r\n  color: white !important;\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.center-screen {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  text-align: center;\r\n  min-height: 100vh;\n}\n.c-sliding-pagination__list-element {\r\n  background: white;\r\n  font-size: 14px;\n}\n.c-sliding-pagination__list-element a {\r\n  color: black !important;\r\n  padding: 12px;\n}\n.c-sliding-pagination__list-element:hover {\r\n  background: #e1f5fe;\n}\n.c-sliding-pagination__list-element.c-sliding-pagination__list-element--active {\r\n  background: #4e73df;\n}\n.c-sliding-pagination__list-element.c-sliding-pagination__list-element--active\r\n  a {\r\n  color: white !important;\n}\n.c-sliding-pagination__list > li {\r\n  margin: 0px !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27046,47 +27202,78 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container-fluid" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("table", { staticClass: "table table-bordered" }, [
+      _vm._m(1),
+      _vm._v(" "),
+      _vm.paginationAttendanceLogs
+        ? _c(
+            "tbody",
+            _vm._l(_vm.paginationAttendanceLogs.data, function (attendanceLog) {
+              return _c("tr", { key: attendanceLog.id }, [
+                _c("td", [_vm._v(_vm._s(attendanceLog.app_user.name))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(attendanceLog.temperature))]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    _vm._s(_vm.dateStringToLocal(attendanceLog.created_at))
+                  ),
+                ]),
+              ])
+            }),
+            0
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("tfoot", [
+        _c(
+          "th",
+          { attrs: { colspan: "3" } },
+          [
+            _c("sliding-pagination", {
+              staticStyle: { float: "right" },
+              attrs: { current: _vm.currentPage, total: _vm.totalPage },
+              on: { "page-change": _vm.pageChanged },
+            }),
+          ],
+          1
+        ),
+      ]),
+    ]),
+  ])
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container-fluid" }, [
-      _c(
-        "div",
-        {
-          staticClass:
-            "d-sm-flex align-items-center justify-content-between mb-4",
-        },
-        [
-          _c("h1", { staticClass: "h3 mb-0 text-gray-800" }, [
-            _vm._v("Attendance Logs"),
-          ]),
-        ]
-      ),
-      _vm._v(" "),
-      _c("table", { staticClass: "table table-bordered" }, [
-        _c("thead", [
-          _c("tr", [
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
-            _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Temperature")]),
-            _vm._v(" "),
-            _c("th", { attrs: { scope: "col" } }, [_vm._v("Time In")]),
-          ]),
+    return _c(
+      "div",
+      {
+        staticClass:
+          "d-sm-flex align-items-center justify-content-between mb-4",
+      },
+      [
+        _c("h1", { staticClass: "h3 mb-0 text-gray-800" }, [
+          _vm._v("Attendance Logs"),
         ]),
+      ]
+    )
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
         _vm._v(" "),
-        _c("tbody", [
-          _c("tr", [
-            _c("td", [_vm._v("Mark")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("Otto")]),
-            _vm._v(" "),
-            _c("td", [_vm._v("@mdo")]),
-          ]),
-        ]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Temperature")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Time In")]),
       ]),
     ])
   },
@@ -27711,7 +27898,7 @@ var render = function () {
                       "a",
                       { staticClass: "nav-link", on: { click: navigate } },
                       [
-                        _c("i", { staticClass: "fas fa-fw fa-table" }),
+                        _c("i", { staticClass: "fas fa-fw fa-users" }),
                         _vm._v(" "),
                         _c("span", [_vm._v("Users")]),
                       ]

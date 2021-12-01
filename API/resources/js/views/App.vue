@@ -33,7 +33,7 @@ export default {
   min-height: 100vh;
 }
 
-/* .c-sliding-pagination__list-element {
+.c-sliding-pagination__list-element {
   background: white;
   font-size: 14px;
 }
@@ -47,7 +47,7 @@ export default {
 }
 
 .c-sliding-pagination__list-element.c-sliding-pagination__list-element--active {
-  background: #9c27b0;
+  background: #4e73df;
 }
 .c-sliding-pagination__list-element.c-sliding-pagination__list-element--active
   a {
@@ -56,5 +56,5 @@ export default {
 
 .c-sliding-pagination__list > li {
   margin: 0px !important;
-} */
+}
 </style>

@@ -13,19 +13,60 @@
           <th scope="col">Time In</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+      <tbody v-if="paginationAttendanceLogs">
+        <tr
+          v-for="attendanceLog in paginationAttendanceLogs.data"
+          :key="attendanceLog.id"
+        >
+          <td>{{ attendanceLog.app_user.name }}</td>
+          <td>{{ attendanceLog.temperature }}</td>
+          <td>{{ dateStringToLocal(attendanceLog.created_at) }}</td>
         </tr>
       </tbody>
+      <tfoot>
+        <th colspan="3">
+          <sliding-pagination
+            style="float: right"
+            :current="currentPage"
+            :total="totalPage"
+            @page-change="pageChanged"
+          ></sliding-pagination>
+        </th>
+      </tfoot>
     </table>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapActions } from "vuex";
+import SlidingPagination from "vue-sliding-pagination";
+import { dateStringToLocal } from "../helpers";
+export default {
+  data() {
+    return {
+      currentPage: 1,
+      totalPage: 1,
+    };
+  },
+  components: { SlidingPagination },
+  methods: {
+    ...mapActions(["fetchAttendanceLogs"]),
+    dateStringToLocal,
+    loadAttendanceLogsPagination(page) {
+      this.fetchAttendanceLogs(page).then(() => {
+        this.currentPage = page;
+        this.totalPage = this.paginationAttendanceLogs.last_page;
+      });
+    },
+    pageChanged(page) {
+      this.loadAttendanceLogsPagination(page);
+    },
+  },
+  computed: mapGetters(["paginationAttendanceLogs"]),
+  created() {
+    this.loadAttendanceLogsPagination(this.currentPage);
+  },
+};
 </script>
 
 <style scoped>

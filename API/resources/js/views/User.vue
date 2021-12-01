@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      totalPage: 0,
+      totalPage: 1,
     };
   },
   components: {

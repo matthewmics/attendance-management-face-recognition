@@ -3,6 +3,8 @@
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppUserController;
+use App\Http\Controllers\AttendanceLogController;
+use App\Models\AttendanceLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,4 +43,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/buildings/search/{name}', [BuildingController::class, 'search']);
 
     Route::resource('app-users', AppUserController::class);
+
+    Route::get('/attendance-log', [AttendanceLogController::class, 'index']);
 });
+
+Route::post('/attendance-log', [AttendanceLogController::class, 'store']);

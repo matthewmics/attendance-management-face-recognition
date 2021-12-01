@@ -10,4 +10,9 @@ class AppUser extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function attendanceLog()
+    {
+        return $this->hasMany(AttendanceLog::class);
+    }
 }

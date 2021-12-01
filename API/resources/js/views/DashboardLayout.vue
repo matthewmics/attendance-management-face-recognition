@@ -37,7 +37,7 @@
       <router-link to="/users" custom v-slot="{ navigate, isActive }">
         <li :class="{ 'nav-item': true, active: isActive }">
           <a class="nav-link" @click="navigate">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-users"></i>
             <span>Users</span></a
           >
         </li>
