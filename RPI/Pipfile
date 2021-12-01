@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+face-recognition = "*"
+opencv-python = "*"
+requests = "*"
 
 [dev-packages]
 
