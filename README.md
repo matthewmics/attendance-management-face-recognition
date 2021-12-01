@@ -25,6 +25,8 @@ Execute the following commands
 ```
 composer install
 
+php artisan migrate
+
 npm install
 
 npm run dev
@@ -38,6 +40,24 @@ Username: admin@admin.com
 Password: admin  
 
 ## Running Face recognition in python
+Install pipenv | run in cmd
+```
+pip install pipenv
+```  
+  
+  
+Open cmd and "cd" (change directory) to RPI folder of the project directory
+```
+cd path_to_project/RPI
+```
+
+Execute the following commands
+```
+pipenv shell
+pipenv install
+
+python .\face_recog_py.py
+```
 
 
 
