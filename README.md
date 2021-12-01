@@ -25,6 +25,8 @@ Execute the following commands
 ```
 composer install
 
+php artisan migrate
+
 npm install
 
 npm run dev
