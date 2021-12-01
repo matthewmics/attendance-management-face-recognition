@@ -2,6 +2,10 @@ import face_recognition
 import cv2
 import numpy as np
 import time
+import requests
+
+# SET API URL
+api_url = "http://127.0.0.1:5000"
 
 # This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
 # other example, but it includes some basic performance tweaks to make things run a lot faster:
@@ -54,8 +58,7 @@ while True:
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     if has_captured:
-        print("sleep: has captured")
-        time.sleep(2)
+        time.sleep(3)
         face_encodings = []
         face_names = []
         has_captured = False
@@ -96,7 +99,6 @@ while True:
             face_names.append(name)
 
     process_this_frame = not process_this_frame
-
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):
         # Scale back up face locations since the frame we detected in was scaled to 1/4 size
@@ -108,8 +110,14 @@ while True:
         if name != "Unknown" and not(has_captured):
             print(name)
             has_captured = True
-            cv2.rectangle(frame, (0, 0),
-                          (fw, fh), (0, 0, 255), cv2.FILLED)
+            textFrameWidth = 87
+            cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),
+                        (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
+                        font, 1.0, (0, 0, 0), 2)
+            response = requests.post(api_url + '/api/attendance-log', data={
+                                     'app_user_id': name, 'temperature': '0.0c'})
             break
         # Draw a box around the face
         # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -123,6 +131,7 @@ while True:
 
     # Display the resulting image
 
+    
     cv2.imshow('Video', frame)
 
     # Hit 'q' on the keyboard to quit!
