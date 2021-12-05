@@ -51,10 +51,16 @@ Open cmd and "cd" (change directory) to RPI folder of the project directory
 cd path_to_project/RPI
 ```
 
-Execute the following commands
+Execute the following commands, run the terminal as admin.
+#Install Visuall C++ tools and Cmake if using Windows
 ```
+pip install -r requirements.txt
+
 pipenv shell
 pipenv install
+#If dlib failed to install in the above script, try this:
+a. pip install cmake
+b. pip install dlib
 
 python .\face_recog_py.py
 ```
