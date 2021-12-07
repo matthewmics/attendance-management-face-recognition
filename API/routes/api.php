@@ -6,7 +6,9 @@ use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\AttendanceLogController;
 use App\Models\AttendanceLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,3 +50,41 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
+
+Route::get('/reseed', function () {
+    DB::table('users')->delete();
+    DB::table('attendance_logs')->delete();
+    DB::table('app_users')->delete();
+    DB::table('users')->insert([
+        [
+            'id' => 1,
+            'name' => 'Admin',
+            'email' => 'admin@localhost.com',
+            'password' => bcrypt('admin'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]
+    ]);
+    DB::table('app_users')->insert([
+        [
+            'id' => 1,
+            'name' => 'Demarcus Rose',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ],
+        [
+            'id' => 2,
+            'name' => 'Miles McGee',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ],
+        [
+            'id' => 3,
+            'name' => 'Somnus Williams',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]
+    ]);
+
+    return 'Database has been reseeded';
+});
