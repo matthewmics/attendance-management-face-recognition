@@ -33,10 +33,14 @@ npm run dev
 
 php artisan serve --port=5000
 ```
+
+on your browser address bar, navigate to http://127.0.0.1:5000/api/reseed  
+to reset and re-populate the database  
+
 Check http://127.0.0.1:5000/ to see if it works
 
 Admin login  
-Username: admin@admin.com  
+Username: admin@localhost.com  
 Password: admin  
 
 ## Running Face recognition in python
