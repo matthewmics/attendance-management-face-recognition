@@ -38,9 +38,9 @@ known_face_encodings = [
 ]
 
 known_face_names = [
-    "1",
-    "2",
-    "3"
+    "1|Demarcus Rose",
+    "2|Miles McGee",
+    "3|Somnus Williams"
 ]
 
 # Initialize some variables
@@ -107,8 +107,18 @@ while True:
         bottom *= 4
         left *= 4
 
+        name_data = name.split("|")
+
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        cv2.rectangle(frame, (left, bottom - 35),
+                      (right, bottom), (0, 0, 255), cv2.FILLED)
+        font = cv2.FONT_HERSHEY_DUPLEX
+        cv2.putText(frame, name, (left + 6, bottom - 6),
+                    font, 1.0, (255, 255, 255), 1)
+        cv2.imshow('Video', frame)
+
         if name != "Unknown" and not(has_captured):
-            print(name)
+            print(name_data[1])
             has_captured = True
             textFrameWidth = 87
             cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),
@@ -117,17 +127,10 @@ while True:
             cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
                         font, 1.0, (0, 0, 0), 2)
             response = requests.post(api_url + '/api/attendance-log', data={
-                                     'app_user_id': name, 'temperature': '0.0c'})
+                                     'app_user_id': name_data[0], 'temperature': '0.0c'})
             break
-        # Draw a box around the face
-        # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
 
-        # Draw a label with a name below the face
-        # cv2.rectangle(frame, (left, bottom - 35),
-        #               (right, bottom), (0, 0, 255), cv2.FILLED)
-        # font = cv2.FONT_HERSHEY_DUPLEX
-        # cv2.putText(frame, name, (left + 6, bottom - 6),
-        #             font, 1.0, (255, 255, 255), 1)
+
 
     # Display the resulting image
 
