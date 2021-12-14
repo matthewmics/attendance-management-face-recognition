@@ -93,7 +93,11 @@ while True:
             face_distances = face_recognition.face_distance(
                 known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
+
+            # Print the tolerance of recognition
+            # print("Best distance: " + str(face_distances[best_match_index])) 
+
+            if matches[best_match_index] and face_distances[best_match_index] < 0.5:
                 name = known_face_names[best_match_index]
 
             face_names.append(name)
