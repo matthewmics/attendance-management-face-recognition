@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 import time
 import requests
+import urllib.request
 
 # SET API URL
 api_url = "http://127.0.0.1:5000"
@@ -30,17 +31,23 @@ biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
 ed_image = face_recognition.load_image_file("ed_sheeran.jpg")
 ed_encoding = face_recognition.face_encodings(ed_image)[0]
 
+response = urllib.request.urlopen("https://upload.wikimedia.org/wikipedia/commons/1/1f/Dwayne_Johnson_2014_%28cropped%29.jpg")
+djohnson_image = face_recognition.load_image_file(response)
+djohnson_encoding = face_recognition.face_encodings(djohnson_image)[0]
+
 # Create arrays of known face encodings and their names
 known_face_encodings = [
     obama_face_encoding,
     biden_face_encoding,
-    ed_encoding
+    ed_encoding,
+    djohnson_encoding
 ]
 
 known_face_names = [
     "1|Demarcus Rose",
     "2|Miles McGee",
-    "3|Somnus Williams"
+    "3|Somnus Williams",
+    "4|Dwayne Johnson"
 ]
 
 # Initialize some variables
@@ -95,7 +102,7 @@ while True:
             best_match_index = np.argmin(face_distances)
 
             # Print the tolerance of recognition
-            # print("Best distance: " + str(face_distances[best_match_index])) 
+            # print("Best distance: " + str(face_distances[best_match_index]))
 
             if matches[best_match_index] and face_distances[best_match_index] < 0.5:
                 name = known_face_names[best_match_index]
@@ -126,19 +133,16 @@ while True:
             has_captured = True
             textFrameWidth = 87
             cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),
-                        (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
+                          (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
                         font, 1.0, (0, 0, 0), 2)
-            response = requests.post(api_url + '/api/attendance-log', data={
-                                     'app_user_id': name_data[0], 'temperature': '0.0c'})
+            # response = requests.post(api_url + '/api/attendance-log', data={
+            #                          'app_user_id': name_data[0], 'temperature': '0.0c'})
             break
-
-
 
     # Display the resulting image
 
-    
     cv2.imshow('Video', frame)
 
     # Hit 'q' on the keyboard to quit!
