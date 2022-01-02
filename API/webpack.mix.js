@@ -11,7 +11,7 @@ const mix = require("laravel-mix");
  |
  */
 
-mix.autoload({ jquery: ["$", "jQuery", "window.jQuery"] });
+mix.autoload({ jquery: ["$", "jQuery", "window.jQuery", "window.$"] });
 mix.js("resources/js/app.js", "public/js")
     .js("resources/vendor/bootstrap/js/bootstrap.bundle.min.js", "public/js")
     .js("resources/vendor/jquery-easing/jquery.easing.min.js", "public/js")

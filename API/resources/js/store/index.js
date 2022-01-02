@@ -3,6 +3,7 @@ import Vue from "vue";
 import authStore from "./modules/authStore.js";
 import appUserStore from "./modules/appUserStore.js";
 import attendanceLogStore from "./modules/attendanceLogStore.js";
+import modalStore from "./modules/modalStore";
 
 // Load Vuex
 Vue.use(Vuex);
@@ -13,5 +14,6 @@ export default new Vuex.Store({
         authStore,
         appUserStore,
         attendanceLogStore,
+        modalStore
     },
 });

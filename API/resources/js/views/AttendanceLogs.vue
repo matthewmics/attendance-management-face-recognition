@@ -23,6 +23,17 @@
           <td>{{ dateStringToLocal(attendanceLog.created_at) }}</td>
         </tr>
       </tbody>
+      <tbody
+        v-if="
+          paginationAttendanceLogs &&
+          paginationAttendanceLogs.data &&
+          paginationAttendanceLogs.data.length === 0
+        "
+      >
+        <tr colspan="100%">
+          <div style="padding: 2em">No records.</div>
+        </tr>
+      </tbody>
       <tfoot>
         <th colspan="3">
           <sliding-pagination

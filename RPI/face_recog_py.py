@@ -4,51 +4,60 @@ import numpy as np
 import time
 import requests
 import urllib.request
+import json
+import _thread
+
+import helpers
 
 # SET API URL
 api_url = "http://127.0.0.1:5000"
 
-# This is a demo of running face recognition on live video from your webcam. It's a little more complicated than the
-# other example, but it includes some basic performance tweaks to make things run a lot faster:
-#   1. Process each video frame at 1/4 resolution (though still display it at full resolution)
-#   2. Only detect faces in every other frame of video.
-
-# PLEASE NOTE: This example requires OpenCV (the `cv2` library) to be installed only to read from your webcam.
-# OpenCV is *not* required to use the face_recognition library. It's only required if you want to run this
-# specific demo. If you have trouble installing it, try any of the other demos that don't require it instead.
-
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
-# Load a sample picture and learn how to recognize it.
-obama_image = face_recognition.load_image_file("obama.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+known_face_encodings = []
+known_face_names = []
 
-# Load a second sample picture and learn how to recognize it.
-biden_image = face_recognition.load_image_file("biden.jpg")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+processing_update = False
 
-ed_image = face_recognition.load_image_file("ed_sheeran.jpg")
-ed_encoding = face_recognition.face_encodings(ed_image)[0]
+# Load faces from API
+response_data = requests.get(api_url + '/api/app-users/getAll').json()
 
-response = urllib.request.urlopen("https://upload.wikimedia.org/wikipedia/commons/1/1f/Dwayne_Johnson_2014_%28cropped%29.jpg")
-djohnson_image = face_recognition.load_image_file(response)
-djohnson_encoding = face_recognition.face_encodings(djohnson_image)[0]
+for user in response_data:
+    try:
+        known_face_encodings.append(
+            helpers.face_encoding_from_url(api_url + user["picture_path"]))
+        known_face_names.append(str(user["id"]) + "|" + user["name"])
+    except:
+        print(user["name"] + " has an invalid photo. Encoding was unsuccessful.")
 
-# Create arrays of known face encodings and their names
-known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding,
-    ed_encoding,
-    djohnson_encoding
-]
+# New thread for checking face updates
 
-known_face_names = [
-    "1|Demarcus Rose",
-    "2|Miles McGee",
-    "3|Somnus Williams",
-    "4|Dwayne Johnson"
-]
+
+def check_face_updates():
+    while True:
+        global known_face_encodings
+        global known_face_names
+        global processing_update
+        response_data = requests.get(api_url + '/api/app-users/rpi-new').json()
+        if response_data["user"]:
+            try:
+                processing_update = True
+                time.sleep(1)
+                known_face_encodings.append(helpers.face_encoding_from_url(
+                    api_url + response_data["user"]["picture_path"]))
+                known_face_names.append(
+                    str(response_data["user"]["id"]) + "|" + response_data["user"]["name"])
+            except:
+                print(response_data["user"]["name"] +
+                      " has an invalid photo. Encoding was unsuccessful.")
+            finally:
+                processing_update = False
+        time.sleep(4)
+
+
+_thread.start_new_thread(check_face_updates, ())
+
 
 # Initialize some variables
 face_locations = []
@@ -58,6 +67,7 @@ process_this_frame = True
 has_captured = False
 
 while True:
+
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
@@ -78,36 +88,31 @@ while True:
     rgb_small_frame = small_frame[:, :, ::-1]
 
     # Only process every other frame of video to save time
-    if process_this_frame:
-        # Find all the faces and face encodings in the current frame of video
-        face_locations = face_recognition.face_locations(rgb_small_frame)
-        face_encodings = face_recognition.face_encodings(
-            rgb_small_frame, face_locations)
+    if process_this_frame & (not processing_update):
+        if len(known_face_encodings) > 0:
+            # Find all the faces and face encodings in the current frame of video
+            face_locations = face_recognition.face_locations(rgb_small_frame)
+            face_encodings = face_recognition.face_encodings(
+                rgb_small_frame, face_locations)
 
-        face_names = []
-        for face_encoding in face_encodings:
-            # See if the face is a match for the known face(s)
-            matches = face_recognition.compare_faces(
-                known_face_encodings, face_encoding)
-            name = "Unknown"
+            face_names = []
+            for face_encoding in face_encodings:
+                # See if the face is a match for the known face(s)
+                matches = face_recognition.compare_faces(
+                    known_face_encodings, face_encoding)
+                name = "Unknown"
 
-            # # If a match was found in known_face_encodings, just use the first one.
-            # if True in matches:
-            #     first_match_index = matches.index(True)
-            #     name = known_face_names[first_match_index]
+                face_distances = face_recognition.face_distance(
+                    known_face_encodings, face_encoding)
+                best_match_index = np.argmin(face_distances)
 
-            # Or instead, use the known face with the smallest distance to the new face
-            face_distances = face_recognition.face_distance(
-                known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
+                # Print the tolerance of recognition
+                # print("Best distance: " + str(face_distances[best_match_index]))
 
-            # Print the tolerance of recognition
-            # print("Best distance: " + str(face_distances[best_match_index]))
+                if matches[best_match_index] and face_distances[best_match_index] < 0.5:
+                    name = known_face_names[best_match_index]
 
-            if matches[best_match_index] and face_distances[best_match_index] < 0.5:
-                name = known_face_names[best_match_index]
-
-            face_names.append(name)
+                face_names.append(name)
 
     process_this_frame = not process_this_frame
     # Display the results
@@ -137,8 +142,8 @@ while True:
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
                         font, 1.0, (0, 0, 0), 2)
-            # response = requests.post(api_url + '/api/attendance-log', data={
-            #                          'app_user_id': name_data[0], 'temperature': '0.0c'})
+            response = requests.post(api_url + '/api/attendance-log', data={
+                                     'app_user_id': name_data[0], 'temperature': '0.0c'})
             break
 
     # Display the resulting image

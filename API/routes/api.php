@@ -36,6 +36,9 @@ Route::get('/test', function (Request $request) {
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 
+Route::get('/app-users/rpi-new', [AppUserController::class, 'rpiNew']);
+Route::get('/app-users/getAll', [AppUserController::class, 'getAll']);
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -44,6 +47,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('buildings', BuildingController::class);
     Route::get('/buildings/search/{name}', [BuildingController::class, 'search']);
 
+    Route::post('/app-users/{id}/uploadFace', [AppUserController::class, 'uploadFaceImage']);
     Route::resource('app-users', AppUserController::class);
 
     Route::get('/attendance-log', [AttendanceLogController::class, 'index']);

@@ -47,6 +47,8 @@ const actions = {
             }
         } catch (err) {
             console.log(err);
+            clearToken();
+            window.location.reload();
         } finally {
             commit("setAuthLoading", false);
         }

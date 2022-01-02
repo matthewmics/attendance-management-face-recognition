@@ -56,9 +56,9 @@
       <hr class="sidebar-divider d-none d-md-block" />
 
       <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
+      <!-- <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
+      </div> -->
 
       <!-- Sidebar Message 
             <div class="sidebar-card d-none d-lg-flex">
@@ -87,7 +87,7 @@
           </button>
 
           <!-- Topbar Search -->
-          <form
+          <!-- <form
             class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
           >
             <div class="input-group">
@@ -104,7 +104,7 @@
                 </button>
               </div>
             </div>
-          </form>
+          </form> -->
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -146,7 +146,7 @@
             </li>
 
             <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <!-- <li class="nav-item dropdown no-arrow mx-1">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -157,10 +157,10 @@
                 aria-expanded="false"
               >
                 <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
+                
                 <span class="badge badge-danger badge-counter">3+</span>
               </a>
-              <!-- Dropdown - Alerts -->
+              
               <div
                 class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="alertsDropdown"
@@ -208,10 +208,10 @@
                   >Show All Alerts</a
                 >
               </div>
-            </li>
+            </li> -->
 
             <!-- Nav Item - Messages -->
-            <li class="nav-item dropdown no-arrow mx-1">
+            <!-- <li class="nav-item dropdown no-arrow mx-1">
               <a
                 class="nav-link dropdown-toggle"
                 href="#"
@@ -222,10 +222,10 @@
                 aria-expanded="false"
               >
                 <i class="fas fa-envelope fa-fw"></i>
-                <!-- Counter - Messages -->
+                
                 <span class="badge badge-danger badge-counter">7</span>
               </a>
-              <!-- Dropdown - Messages -->
+              
               <div
                 class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                 aria-labelledby="messagesDropdown"
@@ -306,7 +306,7 @@
                   >Read More Messages</a
                 >
               </div>
-            </li>
+            </li> -->
 
             <div class="topbar-divider d-none d-sm-block"></div>
 
@@ -372,7 +372,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2021</span>
+            <span>Copyright &copy; Facerecog</span>
           </div>
         </div>
       </footer>

@@ -41,6 +41,17 @@ const User = {
 
 const AppUser = {
     list: (page) => requests.get(`/app-users?page=${page}`),
+    create: (req) => requests.post(`/app-users`, req),
+    uploadFaceImage: (faceImage, id) => {
+        const formData = new FormData();
+        formData.append("face", faceImage);
+        return axios
+            .post(`/app-users/${id}/uploadFace`, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            })
+            .then(sleep(sleepDuration))
+            .then(responseBody);
+    },
 };
 
 const AttendanceLog = {
