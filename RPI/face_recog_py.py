@@ -75,7 +75,7 @@ while True:
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     if has_captured:
-        time.sleep(3)
+        time.sleep(7)
         face_encodings = []
         face_names = []
         has_captured = False
