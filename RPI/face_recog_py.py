@@ -19,6 +19,7 @@ known_face_encodings = []
 known_face_names = []
 
 processing_update = False
+capture_cd = False
 
 # Load faces from API
 response_data = requests.get(api_url + '/api/app-users/getAll').json()
@@ -32,8 +33,6 @@ for user in response_data:
         print(user["name"] + " has an invalid photo. Encoding was unsuccessful.")
 
 # New thread for checking face updates
-
-
 def check_face_updates():
     while True:
         global known_face_encodings
@@ -54,10 +53,17 @@ def check_face_updates():
             finally:
                 processing_update = False
         time.sleep(4)
-
-
 _thread.start_new_thread(check_face_updates, ())
 
+# Thread for resetting cooldown of capture
+def reset_capture_cd():
+    while True:
+        global capture_cd
+        if capture_cd:
+            time.sleep(4)
+            capture_cd = False
+        time.sleep(1)
+_thread.start_new_thread(reset_capture_cd, ())
 
 # Initialize some variables
 face_locations = []
@@ -75,7 +81,7 @@ while True:
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     if has_captured:
-        time.sleep(3)
+        time.sleep(1)
         face_encodings = []
         face_names = []
         has_captured = False
@@ -88,7 +94,7 @@ while True:
     rgb_small_frame = small_frame[:, :, ::-1]
 
     # Only process every other frame of video to save time
-    if process_this_frame & (not processing_update):
+    if process_this_frame & (not processing_update) & (not capture_cd):
         if len(known_face_encodings) > 0:
             # Find all the faces and face encodings in the current frame of video
             face_locations = face_recognition.face_locations(rgb_small_frame)
@@ -144,6 +150,7 @@ while True:
                         font, 1.0, (0, 0, 0), 2)
             response = requests.post(api_url + '/api/attendance-log', data={
                                      'app_user_id': name_data[0], 'temperature': '0.0c'})
+            capture_cd = True
             break
 
     # Display the resulting image
