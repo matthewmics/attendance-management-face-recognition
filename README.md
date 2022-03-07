@@ -34,7 +34,12 @@ npm install
 
 npm run dev
 
+# Run server
 php artisan serve --port=5000
+- OR -
+php artisan serve --port=5000 --host 0.0.0.0 (use this command if you want the server accessed across the network)
+
+
 ```
 
 on your browser address bar, navigate to http://127.0.0.1:5000/api/reseed  
