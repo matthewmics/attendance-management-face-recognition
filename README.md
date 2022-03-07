@@ -25,7 +25,10 @@ Execute the following commands
 ```
 composer install
 
-php artisan migrate
+
+php artisan storage:link (this command should only be executed once)
+
+php artisan migrate (this should be executed everytime there is a change in schema/database)
 
 npm install
 
