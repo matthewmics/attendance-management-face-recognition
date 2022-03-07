@@ -25,13 +25,21 @@ Execute the following commands
 ```
 composer install
 
-php artisan migrate
+
+php artisan storage:link (this command should only be executed once)
+
+php artisan migrate (this should be executed everytime there is a change in schema/database)
 
 npm install
 
 npm run dev
 
+# Run server
 php artisan serve --port=5000
+- OR -
+php artisan serve --port=5000 --host 0.0.0.0 (use this command if you want the server accessed across the network)
+
+
 ```
 
 on your browser address bar, navigate to http://127.0.0.1:5000/api/reseed  
