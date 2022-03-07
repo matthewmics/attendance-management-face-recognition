@@ -38,7 +38,7 @@
         <li :class="{ 'nav-item': true, active: isActive }">
           <a class="nav-link" @click="navigate">
             <i class="fas fa-fw fa-users"></i>
-            <span>Users</span></a
+            <span>Employees</span></a
           >
         </li>
       </router-link>

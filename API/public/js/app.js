@@ -2136,6 +2136,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -3588,7 +3590,7 @@ var clearToken = function clearToken() {
 
 var dateStringToLocal = function dateStringToLocal(date) {
   var stillUtc = moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).toDate();
-  return moment__WEBPACK_IMPORTED_MODULE_0___default()(stillUtc).local().format("YYYY-MM-DD hh:mm:ss");
+  return moment__WEBPACK_IMPORTED_MODULE_0___default()(stillUtc).local().format("LLL");
 };
 
 
@@ -27748,6 +27750,16 @@ var render = function () {
                     _vm._s(_vm.dateStringToLocal(attendanceLog.created_at))
                   ),
                 ]),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.dateStringToLocal(
+                        attendanceLog.time_out ? attendanceLog.time_out : "-"
+                      )
+                    )
+                  ),
+                ]),
               ])
             }),
             0
@@ -27763,7 +27775,7 @@ var render = function () {
       _c("tfoot", [
         _c(
           "th",
-          { attrs: { colspan: "3" } },
+          { attrs: { colspan: "100%" } },
           [
             _c("sliding-pagination", {
               staticStyle: { float: "right" },
@@ -27801,11 +27813,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Employee")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Temperature")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Time In")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Time Out")]),
       ]),
     ])
   },
@@ -27989,7 +28003,7 @@ var render = function () {
                       [
                         _c("i", { staticClass: "fas fa-fw fa-users" }),
                         _vm._v(" "),
-                        _c("span", [_vm._v("Users")]),
+                        _c("span", [_vm._v("Employees")]),
                       ]
                     ),
                   ]),
@@ -28408,7 +28422,7 @@ var render = function () {
           attrs: { type: "button" },
           on: { click: _vm.openUserForm },
         },
-        [_vm._v("\n    Add new user\n  ")]
+        [_vm._v("\n    Add new employee\n  ")]
       ),
       _vm._v(" "),
       _c(
@@ -28515,7 +28529,11 @@ var staticRenderFns = [
         staticClass:
           "d-sm-flex align-items-center justify-content-between mb-4",
       },
-      [_c("h1", { staticClass: "h3 mb-0 text-gray-800" }, [_vm._v("Users")])]
+      [
+        _c("h1", { staticClass: "h3 mb-0 text-gray-800" }, [
+          _vm._v("Employees"),
+        ]),
+      ]
     )
   },
   function () {

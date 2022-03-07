@@ -9,7 +9,7 @@ class AppUser extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'picture_path', 'status'];
+    protected $fillable = ['name', 'picture_path', 'status', 'department_id'];
 
     public function attendanceLog()
     {

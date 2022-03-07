@@ -4,6 +4,8 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\AttendanceLogController;
+use App\Http\Controllers\CapturedFaceController;
+use App\Http\Controllers\DepartmentController;
 use App\Models\AttendanceLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +53,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::resource('app-users', AppUserController::class);
 
     Route::get('/attendance-log', [AttendanceLogController::class, 'index']);
+
+    Route::resource('departments', DepartmentController::class);
+
+
+    Route::get('/captured-face/{id}', [CapturedFaceController::class, 'show']);
 });
 
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
@@ -69,26 +76,26 @@ Route::get('/reseed', function () {
             'updated_at' => Carbon::now()
         ]
     ]);
-    DB::table('app_users')->insert([
-        [
-            'id' => 1,
-            'name' => 'Demarcus Rose',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ],
-        [
-            'id' => 2,
-            'name' => 'Miles McGee',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ],
-        [
-            'id' => 3,
-            'name' => 'Somnus Williams',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]
-    ]);
+    // DB::table('app_users')->insert([
+    //     [
+    //         'id' => 1,
+    //         'name' => 'Demarcus Rose',
+    //         'created_at' => Carbon::now(),
+    //         'updated_at' => Carbon::now()
+    //     ],
+    //     [
+    //         'id' => 2,
+    //         'name' => 'Miles McGee',
+    //         'created_at' => Carbon::now(),
+    //         'updated_at' => Carbon::now()
+    //     ],
+    //     [
+    //         'id' => 3,
+    //         'name' => 'Somnus Williams',
+    //         'created_at' => Carbon::now(),
+    //         'updated_at' => Carbon::now()
+    //     ]
+    // ]);
 
     return 'Database has been reseeded';
 });

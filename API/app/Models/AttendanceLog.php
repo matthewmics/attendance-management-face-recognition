@@ -10,7 +10,12 @@ class AttendanceLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['app_user_id', 'temperature'];
+    protected $fillable = [
+        'app_user_id', 
+        'temperature', 
+        'captured_face_id',
+        'time_out'
+    ];
 
     public function appUser()
     {

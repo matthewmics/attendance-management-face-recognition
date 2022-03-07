@@ -11,7 +11,7 @@ const clearToken = () =>
 
 const dateStringToLocal = (date) => {
   var stillUtc = moment.utc(date).toDate();
-  return moment(stillUtc).local().format("YYYY-MM-DD hh:mm:ss");
+  return moment(stillUtc).local().format("LLL");
 };
 
 export { getToken, setToken, clearToken, dateStringToLocal };

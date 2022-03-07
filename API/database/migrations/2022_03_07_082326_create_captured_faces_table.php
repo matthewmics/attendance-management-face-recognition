@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AppUserAddColumnRpiStatus extends Migration
+class CreateCapturedFacesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AppUserAddColumnRpiStatus extends Migration
      */
     public function up()
     {
-        Schema::table('app_users', function (Blueprint $table) {
-            $table->string('status', 50)->default('handled');
+        Schema::create('captured_faces', function (Blueprint $table) {
+            $table->id();
+            $table->longText('data_base64');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ class AppUserAddColumnRpiStatus extends Migration
      */
     public function down()
     {
-        Schema::table('app_users', function (Blueprint $table) {
-            $table->dropColumn(['status']);
-        });
+        Schema::dropIfExists('captured_faces');
     }
 }

@@ -11,10 +11,10 @@
     />
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-      <h1 class="h3 mb-0 text-gray-800">Users</h1>
+      <h1 class="h3 mb-0 text-gray-800">Employees</h1>
     </div>
     <button type="button" class="btn btn-primary" @click="openUserForm">
-      Add new user
+      Add new employee
     </button>
     <table class="table table-bordered" style="margin-top: 1em">
       <thead>

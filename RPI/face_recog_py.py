@@ -6,6 +6,7 @@ import requests
 import urllib.request
 import json
 import _thread
+import base64
 
 import helpers
 
@@ -148,8 +149,19 @@ while True:
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
                         font, 1.0, (0, 0, 0), 2)
+
+            #get base64 image                
+            ret, buffer = cv2.imencode('.jpg', frame)
+            encodedbase64text = base64.b64encode(buffer)
+            decodedbase64text = encodedbase64text.decode('utf-8')
+
+            # Send a post request to api
             response = requests.post(api_url + '/api/attendance-log', data={
-                                     'app_user_id': name_data[0], 'temperature': '0.0c'})
+                                     'app_user_id': name_data[0], 
+                                     'temperature': '0.0c', 
+                                     'data_base64' : decodedbase64text})
+
+
             capture_cd = True
             break
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AppUserAddColumnRpiStatus extends Migration
+class AddTimeOutToAttendanceLogs extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AppUserAddColumnRpiStatus extends Migration
      */
     public function up()
     {
-        Schema::table('app_users', function (Blueprint $table) {
-            $table->string('status', 50)->default('handled');
+        Schema::table('attendance_logs', function (Blueprint $table) {
+            $table->dateTime('time_out', 0)->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AppUserAddColumnRpiStatus extends Migration
      */
     public function down()
     {
-        Schema::table('app_users', function (Blueprint $table) {
-            $table->dropColumn(['status']);
+        Schema::table('attendance_logs', function (Blueprint $table) {
+            $table->dropColumn(['time_out']);
         });
     }
 }

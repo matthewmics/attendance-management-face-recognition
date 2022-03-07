@@ -8,9 +8,10 @@
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th scope="col">Name</th>
+          <th scope="col">Employee</th>
           <th scope="col">Temperature</th>
           <th scope="col">Time In</th>
+          <th scope="col">Time Out</th>
         </tr>
       </thead>
       <tbody v-if="paginationAttendanceLogs">
@@ -21,6 +22,7 @@
           <td>{{ attendanceLog.app_user.name }}</td>
           <td>{{ attendanceLog.temperature }}</td>
           <td>{{ dateStringToLocal(attendanceLog.created_at) }}</td>
+          <td>{{ dateStringToLocal(attendanceLog.time_out ? attendanceLog.time_out : '-') }}</td>
         </tr>
       </tbody>
       <tbody
@@ -35,7 +37,7 @@
         </tr>
       </tbody>
       <tfoot>
-        <th colspan="3">
+        <th colspan="100%">
           <sliding-pagination
             style="float: right"
             :current="currentPage"
