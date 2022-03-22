@@ -106,6 +106,8 @@ export const DashboardContent = () => {
   const [logsList, setLogsList] = useState([]);
   const [logsDt, setLogsDt] = useState([]);
 
+  const [loadingReport, setLoadingReport] = useState(false);
+
   const [departmentData, setDepartmentData] = useState({
     options: [{ value: 0, text: "All" }],
     optionsReport: [],
@@ -321,19 +323,29 @@ export const DashboardContent = () => {
 
                 <br></br>
                 <Button
+                  loading={loadingReport || departmentData.loading}
+                  disabled={loadingReport || departmentData.loading}
                   icon
                   fluid
                   labelPosition="left"
                   onClick={async () => {
-                    console.log({
-                      ...filterReport,
-                      department_id: departmentData.selectedReport,
-                    });
+                    setLoadingReport(true);
                     const response = await agent.Report.generate({
                       ...filterReport,
                       department_id: departmentData.selectedReport,
                     });
-                    saveAs(response, "file.csv");
+                    saveAs(
+                      response,
+                      departmentData.optionsReport.filter(
+                        (a) => a.value === departmentData.selectedReport
+                      )[0].text +
+                        "_" +
+                        filterReport.from +
+                        "_to_" +
+                        filterReport.to +
+                        ".csv"
+                    );
+                    setLoadingReport(false);
                   }}
                 >
                   <Icon name="file text" />
@@ -347,7 +359,27 @@ export const DashboardContent = () => {
         <Grid.Row>
           {/* ATTENDANCE LOGS */}
           <Grid.Column computer={16} mobile={16}>
-            <Header as="h3">Attendance Logs</Header>
+            <Header style={{ display: "inline" }} as="h3">
+              Attendance Logs
+            </Header>
+
+            <Button
+              icon
+              size="mini"
+              style={{ marginLeft: "10px" }}
+              color="orange"
+              circular
+              disabled={loadingLogs || departmentData.loading}
+              loading={loadingLogs || departmentData.loading}
+              onClick={() => {
+                loadLogs().then(() => {
+                  searchRef.current.inputRef.current.value = "";
+                  applyFilter();
+                });
+              }}
+            >
+              <Icon name="redo" />
+            </Button>
             <Segment>
               <span style={{ float: "left" }}>
                 <DelayedSearchInput
