@@ -1,0 +1,89 @@
+.link-active {
+  font-weight: bold;
+  color: white !important;
+}
+
+.link-active .icon,
+.link-active span {
+  color: white !important;
+}
+
+body {
+  background-color: #f5f5f5 !important;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.page-header-title {
+  font-weight: 900;
+  font-size: 17px;
+  font-family: "Verdana";
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.float-r {
+  float: right;
+}
+
+div.disp-ib {
+  display: inline-block;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.cellcenterparent {
+  width: 100%;
+  height: 100%;
+  display: table;
+  position: fixed;
+}
+
+.cellcentercontent {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.link {
+  cursor: pointer;
+  color: #2196f3;
+}
+
+div.notification-unread {
+  background-color: yellow !important;
+  font-weight: bold;
+}
+
+.text-bold {
+  font-weight: bold !important;
+  border-bottom: 3px solid blue;
+}
+
+.bg-gradient-1 {
+  background: radial-gradient(
+    circle,
+    rgba(187, 222, 251, 1) 0%,
+    rgba(227, 242, 253, 1) 100%
+  ) !important;
+}
+
+.bg-gradient-2 {
+  background: radial-gradient(
+    circle,
+    rgba(244, 67, 54, 1) 0%,
+    rgba(229, 115, 115, 1) 100%
+  ) !important;
+  color: white;
+}
+
+.dashboard-segment {
+  height: 300px;
+  overflow-y: auto;
+}

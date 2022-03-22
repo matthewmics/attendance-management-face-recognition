@@ -7,29 +7,71 @@ use App\Models\AttendanceLog;
 use App\Models\CapturedFace;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AttendanceLogController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function generateAttendance()
     {
-        if ($request->input('noPagination') == 1) {
+        AttendanceLog::where('temperature', 'N/A')->delete();
+        $appUsers =  AppUser::get();
 
-            return AttendanceLog::with('appUser')->orderBy('created_at', 'DESC')->get();
+        foreach ($appUsers as $user) {
+
+            // $subDays = rand(15, 60);
+            $subDays = 15;
+
+            for ($i = 0; $i < 14; $i++) {
+
+                $date = Carbon::now('UTC')->subDay($subDays);
+                $date->hour = 23;
+                $date->minute = 0;
+                $date->second = 0;
+                if (rand(0, 100) > 75) {
+                    $date->minute = 15;
+                }
+
+                $dateOut = Carbon::now('UTC')->subDay($subDays);
+                $dateOut->hour = 32;
+                $dateOut->minute = 0;
+                $dateOut->second = 0;
+                if (rand(0, 100) > 75) {
+                    $dateOut->hour = 7;
+                    $dateOut->minute = 45;
+
+                    if (rand(0, 100) < 35) {
+                        $dateOut = null;
+                    }
+                }
+
+                $id = AttendanceLog::insertGetId([
+                    'app_user_id' => $user->id,
+                    'temperature' => 'N/A',
+                    'created_at' => $date,
+                    'time_out' => $dateOut
+                ]);
+
+                CapturedFace::create([
+                    'attendance_log_id' => $id,
+                    'data_base64' => HelperController::$base64Demo
+                ]);
+
+                $subDays--;
+            }
         }
-        return AttendanceLog::with('appUser')->orderBy('created_at', 'DESC')->paginate(10);
+
+        DB::statement("delete from attendance_logs logs where extract(isodow from date (logs.created_at)) - 1  in (4,5)");
+
+        return 'Attendance Logs have been generated';
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function index(Request $request)
+    {
+        return AttendanceLog::with(['appUser', 'appUser.department'])->orderBy('created_at', 'DESC')->get();
+    }
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -40,55 +82,44 @@ class AttendanceLogController extends Controller
 
         $app_user = AppUser::find($request['app_user_id']);
 
-        $captured_face = CapturedFace::create(['data_base64' => $request['data_base64']]);
-        $request['captured_face_id'] = $captured_face->id;
-
-        $previous_log = AttendanceLog::where('app_user_id', $app_user->id)->orderBy('id', 'desc')->first();
+        $previous_log = AttendanceLog::where('app_user_id', $app_user->id)->orderBy('created_at', 'desc')->first();
 
         if ($previous_log) {
 
-            $previous_log_date = explode(" ", str_replace("T", " ", $previous_log->created_at))[0];
-            $current_date = Carbon::now()->toDateString();
+            $previousLogCarbon = Carbon::createFromFormat('Y-m-d G:i:s', $previous_log->created_at);
 
-            if ($current_date == $previous_log_date) {
-                $previous_log->time_out = Carbon::now('utc');
+            $current_date = Carbon::now('UTC');
+            
+            if ($previousLogCarbon->diffInHours($current_date) < 12) {
+                $previous_log->time_out = Carbon::now('UTC');
                 $previous_log->save();
                 return $previous_log;
             }
         }
 
-        return AttendanceLog::create($request->all());
+        $attendanceLog = AttendanceLog::create($request->all());
+
+        CapturedFace::create([
+            'data_base64' => $request['data_base64'],
+            'attendance_log_id' => $attendanceLog->id
+        ]);
+
+        return $attendanceLog;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         return AttendanceLog::find($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         // 
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //

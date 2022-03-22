@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Department;
 
 class AppUser extends Model
 {
@@ -14,5 +15,10 @@ class AppUser extends Model
     public function attendanceLog()
     {
         return $this->hasMany(AttendanceLog::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

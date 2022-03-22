@@ -10,6 +10,8 @@ class CapturedFaceController extends Controller
     public function show(Request $request, $id)
     {
 
-        return CapturedFace::find($id);
+        $base64data = CapturedFace::find($id)->data_base64;
+
+        return response($base64data, 200)->header('Content-Type', 'text/plain');
     }
 }

@@ -8,5 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CapturedFace extends Model
 {
     use HasFactory;
-    protected $fillable = ['data_base64'];
+    protected $primaryKey = 'attendance_log_id';
+
+    protected $fillable = ['data_base64', 'attendance_log_id'];
 }

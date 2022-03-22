@@ -122,6 +122,23 @@ while True:
                 face_names.append(name)
 
     process_this_frame = not process_this_frame
+
+    # display box if empty names
+    if not face_names:
+
+        left = 200
+        right = fw - 200
+        bottom = fh - 100
+        top = 100
+
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        cv2.rectangle(frame, (left, bottom - 35),
+                      (right, bottom), (0, 0, 255), cv2.FILLED)
+        font = cv2.FONT_HERSHEY_DUPLEX
+        cv2.putText(frame, 'Unknown', (left + 6, bottom - 6),
+                    font, 1.0, (255, 255, 255), 1)
+        cv2.imshow('Video', frame)
+
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):
         # Scale back up face locations since the frame we detected in was scaled to 1/4 size

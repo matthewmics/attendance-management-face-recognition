@@ -26,7 +26,7 @@ class AddPicturePath extends Migration
     public function down()
     {
         Schema::table('app_users', function (Blueprint $table) {
-            //
+            $table->dropColumn(['app_users']);
         });
     }
 }

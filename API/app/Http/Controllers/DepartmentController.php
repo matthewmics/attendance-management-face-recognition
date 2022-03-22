@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Schedule;
+use App\Http\Controllers\HelperController;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -16,9 +18,29 @@ class DepartmentController extends Controller
     {
         $request->validate([
             'name' => 'required'
+        ], [
+            'name.required' => "Department name is required"
         ]);
 
-        return Department::create($request->all());
+        $department = Department::create($request->all());
+
+        $id = $department->id;
+
+        foreach (HelperController::$daysOfWeek as $day) {
+            Schedule::create([
+                'name' => $day,
+                'department_id' => $id
+            ]);
+        }
+
+        return $department;
+    }
+
+    public function showSchedules($id)
+    {
+        $department = Department::find($id);
+
+        return Schedule::where('department_id', $department->id)->orderBy('id')->get();
     }
 
     public function show($id)

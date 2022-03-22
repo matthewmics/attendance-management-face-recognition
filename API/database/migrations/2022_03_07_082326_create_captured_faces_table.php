@@ -14,9 +14,11 @@ class CreateCapturedFacesTable extends Migration
     public function up()
     {
         Schema::create('captured_faces', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('attendance_log_id')->constrained('attendance_logs')->onDelete('cascade');
             $table->longText('data_base64');
             $table->timestamps();
+
+            $table->primary('attendance_log_id');
         });
     }
 

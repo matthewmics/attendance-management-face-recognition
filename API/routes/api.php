@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\AttendanceLogController;
 use App\Http\Controllers\CapturedFaceController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ScheduleController;
 use App\Models\AttendanceLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -46,56 +47,23 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
 
-    Route::resource('buildings', BuildingController::class);
-    Route::get('/buildings/search/{name}', [BuildingController::class, 'search']);
-
     Route::post('/app-users/{id}/uploadFace', [AppUserController::class, 'uploadFaceImage']);
     Route::resource('app-users', AppUserController::class);
 
-    Route::get('/attendance-log', [AttendanceLogController::class, 'index']);
+    Route::get('/attendance-logs', [AttendanceLogController::class, 'index']);
 
+    Route::get('/departments/{id}/schedules', [DepartmentController::class, 'showSchedules']);
     Route::resource('departments', DepartmentController::class);
 
+    Route::put('/schedules/{id}', [ScheduleController::class, 'setSchedule']);
 
-    Route::get('/captured-face/{id}', [CapturedFaceController::class, 'show']);
+    Route::get('/captured-faces/{id}', [CapturedFaceController::class, 'show']);
+
 });
+
+Route::get('/al-generate', [AttendanceLogController::class, 'generateAttendance']);
+
+Route::post('/reports/generate', [ReportController::class, 'generateGeneralReport']);
 
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
 
-Route::get('/reseed', function () {
-    DB::table('users')->delete();
-    DB::table('attendance_logs')->delete();
-    DB::table('app_users')->delete();
-    DB::table('users')->insert([
-        [
-            'id' => 1,
-            'name' => 'Admin',
-            'email' => 'admin@localhost.com',
-            'password' => bcrypt('admin'),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
-        ]
-    ]);
-    // DB::table('app_users')->insert([
-    //     [
-    //         'id' => 1,
-    //         'name' => 'Demarcus Rose',
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now()
-    //     ],
-    //     [
-    //         'id' => 2,
-    //         'name' => 'Miles McGee',
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now()
-    //     ],
-    //     [
-    //         'id' => 3,
-    //         'name' => 'Somnus Williams',
-    //         'created_at' => Carbon::now(),
-    //         'updated_at' => Carbon::now()
-    //     ]
-    // ]);
-
-    return 'Database has been reseeded';
-});
