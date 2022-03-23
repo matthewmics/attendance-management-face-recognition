@@ -19,7 +19,7 @@ class AttendanceLog extends Model
 
     public function appUser()
     {
-        return $this->belongsTo(AppUser::class);
+        return $this->belongsTo(AppUser::class)->withTrashed();
     }
 
     public function capturedFace()

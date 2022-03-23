@@ -15,7 +15,7 @@ class CreateAttendanceLogsTable extends Migration
     {
         Schema::create('attendance_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("app_user_id")->constrained("app_users")->onDelete('cascade');
+            $table->foreignId("app_user_id")->constrained("app_users");
             $table->string('temperature', 100);
             $table->timestamps();
         });

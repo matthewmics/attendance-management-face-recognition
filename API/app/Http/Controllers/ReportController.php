@@ -24,7 +24,7 @@ class ReportController extends Controller
 
         $department_id = $request['department_id'];
 
-        $users = AppUser::where('department_id', $department_id)->get();
+        $users = AppUser::where('department_id', $department_id)->withTrashed()->get();
 
         $restDays = Schedule::where('department_id', $department_id)->where('rest_day', true)->pluck('name')->toArray();
         $workDays = Schedule::where('department_id', $department_id)->where('rest_day', false)->get()->toArray();
