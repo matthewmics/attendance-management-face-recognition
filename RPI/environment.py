@@ -8,5 +8,7 @@ frame_threshold = 100
 #  0.56 = still safe but look alikes could get captured
 similar_face_threshold = 0.51
 
-# index of your camera | 0 = laptop's built in camera | 1 = external camera | 2 = if you have more than 1 external cameras
+# index of your web cam
+# 0 = laptop's built in camera | if not a laptop, still use 0 to reference the first web cam
+# 1 = external camera or the second camera
 camera_index = 0
