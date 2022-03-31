@@ -14,6 +14,12 @@ const dateStringToLocal = (date, format = "LLL") => {
   return moment(stillUtc).local().format(format);
 };
 
+const dateStringToLocalDate = (date, format = "LLL") => {
+  var stillUtc = moment.utc(date).toDate();
+  // return moment(stillUtc).local().format("YYYY-MM-DD hh:mm:ss");
+  return moment(stillUtc).local().format("YYYY-MM-DD");
+};
+
 const utcTimeToLocal = (time) => {
   let timeArray = time.split(":");
 
@@ -60,5 +66,6 @@ export {
   toMoney,
   titleCase,
   utcTimeToLocal,
+  dateStringToLocalDate,
   localTimeToUTC,
 };

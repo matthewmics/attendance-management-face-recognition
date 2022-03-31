@@ -27,7 +27,11 @@ class ReportController extends Controller
         $users = AppUser::where('department_id', $department_id)->withTrashed()->get();
 
         $restDays = Schedule::where('department_id', $department_id)->where('rest_day', true)->pluck('name')->toArray();
-        $workDays = Schedule::where('department_id', $department_id)->where('rest_day', false)->get()->toArray();
+        $workDays = Schedule::selectRaw('("in" + interval \'8 hour\') as local_in,
+                                        ("out" + interval \'8 hour\') as local_out,
+                                        *')
+            ->where('department_id', $department_id)
+            ->where('rest_day', false)->get()->toArray();
 
         $period = CarbonPeriod::create($from, $to);
 
@@ -35,7 +39,10 @@ class ReportController extends Controller
         $result = [];
         foreach ($users as $user) {
 
-            $userLogs = AttendanceLog::selectRaw('(created_at + interval \'8 hour\') as local_created_at, *')->where('app_user_id', $user->id)->get()->toArray();
+            $userLogs = AttendanceLog::selectRaw('(created_at + interval \'8 hour\') as local_created_at, 
+                                                  (time_out + interval \'8 hour\') as local_time_out,
+                                                  *')
+                ->where('app_user_id', $user->id)->get()->toArray();
 
             $totalAbsences = 0;
             $totalLates = 0;
@@ -50,16 +57,19 @@ class ReportController extends Controller
 
                     if ($log && $log["time_out"]) {
 
-                        $inCarbon = Carbon::createFromFormat($this->dateFormat, $log['created_at']);
-                        $outCarbon = Carbon::createFromFormat($this->dateFormat, $log['time_out']);
+                        $inCarbon = Carbon::createFromFormat($this->dateFormat, $log['local_created_at']);
+                        $outCarbon = Carbon::createFromFormat($this->dateFormat, $log['local_time_out']);
 
                         $workDayKey = array_search($dow, array_column($workDays, 'name'));
 
-                        $workDayCarbonIn = Carbon::createFromFormat($this->dateFormat, $inCarbon->format('Y-m-d') . ' ' . $workDays[$workDayKey]["in"]);
-                        $workDayCarbonOut = Carbon::createFromFormat($this->dateFormat, $outCarbon->format('Y-m-d') . ' ' . $workDays[$workDayKey]["out"]);
+                        $workDayCarbonIn = Carbon::createFromFormat($this->dateFormat, $inCarbon->format('Y-m-d') . ' ' . $workDays[$workDayKey]["local_in"]);
+                        $workDayCarbonOut = Carbon::createFromFormat($this->dateFormat, $inCarbon->format('Y-m-d') . ' ' . $workDays[$workDayKey]["local_out"]);
 
                         $totalWorkHours =  $workDayCarbonIn->diffInMinutes($workDayCarbonOut);
                         $timeRendered = $inCarbon->diffInMinutes($outCarbon);
+
+                        Log::info($workDayCarbonIn->toDateTimeString());
+                        Log::info($workDayCarbonOut->toDateTimeString());
 
                         if ($timeRendered < $totalWorkHours) {
                             $totalUndertimes += $totalWorkHours - $timeRendered;

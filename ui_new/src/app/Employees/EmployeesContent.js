@@ -140,7 +140,23 @@ export const EmployeesContent = () => {
     <Grid>
       <Grid.Row>
         <Grid.Column computer={16} mobile={16}>
-          <Header as="h3">Employees</Header>
+          <Header as="h3" style={{ display: "inline" }}>
+            Employees
+          </Header>
+          <Button
+            icon
+            size="mini"
+            style={{ marginLeft: "10px" }}
+            color="orange"
+            circular
+            disabled={loading}
+            loading={loading}
+            onClick={() => {
+              loadData();
+            }}
+          >
+            <Icon name="redo" />
+          </Button>
           <Segment style={{ minHeight: "250px" }}>
             <div>
               <Button

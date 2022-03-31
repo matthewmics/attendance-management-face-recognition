@@ -9,12 +9,13 @@ import _thread
 import base64
 
 import helpers
+import environment
 
 # SET API URL
-api_url = "http://127.0.0.1:5000"
+api_url = environment.url
 
-# Get a reference to webcam #0 (the default one)
-video_capture = cv2.VideoCapture(0)
+# Get a reference to webcam from environment
+video_capture = cv2.VideoCapture(environment.camera_index)
 
 known_face_encodings = []
 known_face_names = []
@@ -61,7 +62,7 @@ def reset_capture_cd():
     while True:
         global capture_cd
         if capture_cd:
-            time.sleep(4)
+            time.sleep(3)
             capture_cd = False
         time.sleep(1)
 _thread.start_new_thread(reset_capture_cd, ())
@@ -72,18 +73,25 @@ face_encodings = []
 face_names = []
 process_this_frame = True
 has_captured = False
+frame_counter = 0
 
 while True:
+
+    # Add frame counter
+    frame_counter += 1
+    if frame_counter > 200000:
+        frame_counter = 0
 
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
     # Resize frame of video to 1/4 size for faster face recognition processing
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
-
+ 
+        
     if has_captured:
         time.sleep(1)
-        face_encodings = []
+        face_encodings = []   
         face_names = []
         has_captured = False
         continue
@@ -116,28 +124,39 @@ while True:
                 # Print the tolerance of recognition
                 # print("Best distance: " + str(face_distances[best_match_index]))
 
-                if matches[best_match_index] and face_distances[best_match_index] < 0.5:
+                if matches[best_match_index] and face_distances[best_match_index] <= environment.similar_face_threshold:
                     name = known_face_names[best_match_index]
+
+                # print(best_match_index)
+
+                # if "Unknown" == name:
+                #     print("similarity: " + str(face_distances[best_match_index]))
+                # else:
+                print(known_face_names[best_match_index].split('|')[1] + " similarity: " + str(face_distances[best_match_index]))
 
                 face_names.append(name)
 
-    process_this_frame = not process_this_frame
+    process_this_frame = (frame_counter % environment.frame_threshold) == 0
+
+    if (frame_counter % (int)(environment.frame_threshold / 4)) == 0:
+        face_names = []
+        continue
 
     # display box if empty names
-    if not face_names:
+    # if not face_names:
 
-        left = 200
-        right = fw - 200
-        bottom = fh - 100
-        top = 100
+    #     left = 200
+    #     right = fw - 200
+    #     bottom = fh - 100
+    #     top = 100
 
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        cv2.rectangle(frame, (left, bottom - 35),
-                      (right, bottom), (0, 0, 255), cv2.FILLED)
-        font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, 'Unknown', (left + 6, bottom - 6),
-                    font, 1.0, (255, 255, 255), 1)
-        cv2.imshow('Video', frame)
+    #     cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+    #     cv2.rectangle(frame, (left, bottom - 35),
+    #                   (right, bottom), (0, 0, 255), cv2.FILLED)
+    #     font = cv2.FONT_HERSHEY_DUPLEX
+    #     cv2.putText(frame, 'Unknown', (left + 6, bottom - 6),
+    #                 font, 1.0, (255, 255, 255), 1)
+    #     cv2.imshow('Video', frame)
 
     # Display the results
     for (top, right, bottom, left), name in zip(face_locations, face_names):
@@ -149,16 +168,28 @@ while True:
 
         name_data = name.split("|")
 
-        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-        cv2.rectangle(frame, (left, bottom - 35),
-                      (right, bottom), (0, 0, 255), cv2.FILLED)
+        name_display = "Unknown"
+
+        if name != "Unknown":
+            name_display = name_data[1]
+
+
+        # cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        # cv2.rectangle(frame, (left, bottom - 35),
+        #               (right, bottom), (0, 0, 255), cv2.FILLED)
+        # font = cv2.FONT_HERSHEY_DUPLEX
+        # cv2.putText(frame, name, (left + 6, bottom - 6),
+        #             font, 1.0, (255, 255, 255), 1)
+        textFrameWidth = 87
+        cv2.rectangle(frame, (int(fw/2) - textFrameWidth, fh-50),
+                          (int(fw/2) + textFrameWidth, fh - 0), (15, 15, 255), cv2.FILLED)
         font = cv2.FONT_HERSHEY_DUPLEX
-        cv2.putText(frame, name, (left + 6, bottom - 6),
-                    font, 1.0, (255, 255, 255), 1)
+        cv2.putText(frame, name_display, (int(fw/2) - textFrameWidth + 6, fh - 15),
+                    font, 1.0, (255, 255, 255), 2)
         cv2.imshow('Video', frame)
 
         if name != "Unknown" and not(has_captured):
-            print(name_data[1])
+            # print(name_data[1])
             has_captured = True
             textFrameWidth = 87
             cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),

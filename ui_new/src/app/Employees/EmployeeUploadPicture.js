@@ -83,7 +83,7 @@ export const EmployeeUploadPicture = ({ id, onSave }) => {
               try {
                 await agent.Employee.uploadFace(id, file);
 
-                toast.success("Picture Face Uploaded");
+                toast.success("Face Picture Uploaded");
                 if (onSave) onSave();
                 modalActions.closeModal(dispatch);
               } catch (err) {

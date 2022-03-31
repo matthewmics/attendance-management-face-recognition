@@ -17,7 +17,7 @@ import { EmptyRecordComponent } from "../Commons/EmptyRecordComponent";
 import { departmentOptions } from "../Commons/Enumerations";
 import { DtStyle, InputGroupStyleParent } from "../Commons/Styles";
 import moment from "moment";
-import { dateStringToLocal } from "../../helpers";
+import { dateStringToLocal, dateStringToLocalDate } from "../../helpers";
 import { PopupButton } from "../Commons/PopupButton";
 import modalActions from "../../actions/modalActions";
 import { AttendanceLogCapturedContent } from "./AttendanceLogCapturedContent";
@@ -174,10 +174,10 @@ export const DashboardContent = () => {
   const applyFilter = (list) => {
     setLogsDt(
       list.filter((a) => {
-        const isBetween = moment(a.created_at).isBetween(
-          filter.from,
-          moment(filter.to).add(1, "days")
-        );
+        const localDate = dateStringToLocalDate(a.created_at);
+        const isBetween =
+          moment(localDate).isSameOrBefore(moment(filter.to)) &&
+          moment(localDate).isSameOrAfter(moment(filter.from));
 
         const { selected } = departmentData;
         if (selected === 0) return isBetween;
