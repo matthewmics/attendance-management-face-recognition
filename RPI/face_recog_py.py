@@ -77,16 +77,16 @@ frame_counter = 0
 
 while True:
 
-    # Add frame counter
-    frame_counter += 1
-    if frame_counter > 200000:
-        frame_counter = 0
-
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
     # Resize frame of video to 1/4 size for faster face recognition processing
     small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    
+    # Add frame counter
+    frame_counter += 1
+    if frame_counter > 200000:
+        frame_counter = 0
  
         
     if has_captured:
@@ -126,12 +126,7 @@ while True:
 
                 if matches[best_match_index] and face_distances[best_match_index] <= environment.similar_face_threshold:
                     name = known_face_names[best_match_index]
-
-                # print(best_match_index)
-
-                # if "Unknown" == name:
-                #     print("similarity: " + str(face_distances[best_match_index]))
-                # else:
+                    
                 print(known_face_names[best_match_index].split('|')[1] + " similarity: " + str(face_distances[best_match_index]))
 
                 face_names.append(name)
@@ -204,6 +199,7 @@ while True:
             decodedbase64text = encodedbase64text.decode('utf-8')
 
             # Send a post request to api
+            print('Executing post request...')
             response = requests.post(api_url + '/api/attendance-log', data={
                                      'app_user_id': name_data[0], 
                                      'temperature': '0.0c', 

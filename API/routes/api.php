@@ -7,6 +7,7 @@ use App\Http\Controllers\CapturedFaceController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TemperatureController;
 use App\Models\AttendanceLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -66,4 +67,6 @@ Route::get('/al-generate', [AttendanceLogController::class, 'generateAttendance'
 Route::post('/reports/generate', [ReportController::class, 'generateGeneralReport']);
 
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
+
+Route::post('/temperatures', [TemperatureController::class, 'store']);
 
