@@ -199,7 +199,7 @@ while True:
             decodedbase64text = encodedbase64text.decode('utf-8')
 
             # Send a post request to api
-            print('Executing post request...')
+            # print('Executing post request...')
             response = requests.post(api_url + '/api/attendance-log', data={
                                      'app_user_id': name_data[0], 
                                      'temperature': '0.0c', 
