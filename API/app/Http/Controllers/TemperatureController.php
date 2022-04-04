@@ -15,4 +15,9 @@ class TemperatureController extends Controller
 
         return Temperature::create(['temp' => $request['temperature']]);
     }
+
+    public function index()
+    {
+        return Temperature::get();
+    }
 }

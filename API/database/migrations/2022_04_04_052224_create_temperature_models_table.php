@@ -27,6 +27,6 @@ class CreateTemperatureModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('temperature_models');
+        Schema::dropIfExists('temperatures');
     }
 }

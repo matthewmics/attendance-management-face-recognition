@@ -69,4 +69,5 @@ Route::post('/reports/generate', [ReportController::class, 'generateGeneralRepor
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
 
 Route::post('/temperatures', [TemperatureController::class, 'store']);
+Route::get('/temperatures', [TemperatureController::class, 'index']);
 

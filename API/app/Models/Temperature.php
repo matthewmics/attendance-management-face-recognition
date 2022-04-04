@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Temperature extends Model
 {
+    protected $table = "temperatures";
     use HasFactory;
     protected $fillable = [
         'temp'
