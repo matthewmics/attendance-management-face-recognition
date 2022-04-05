@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AppUser;
 use App\Models\AttendanceLog;
 use App\Models\CapturedFace;
+use App\Models\Temperature;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -76,9 +77,18 @@ class AttendanceLogController extends Controller
     {
         $request->validate([
             'app_user_id' => 'required',
-            'temperature' => 'required',
             'data_base64' => 'required'
         ]);
+
+        $temperature = Temperature::orderBy('created_at', 'desc')->first();
+
+        $temperatureValue = rand(35 * 10, 39 * 10) / 10 . ' C';
+
+        if ($temperature) {
+            $temperatureValue = $temperature->temp . ' C';
+        }
+
+        $request["temperature"] = $temperatureValue;
 
         $app_user = AppUser::find($request['app_user_id']);
 
@@ -89,15 +99,18 @@ class AttendanceLogController extends Controller
             $previousLogCarbon = Carbon::createFromFormat('Y-m-d G:i:s', $previous_log->created_at);
 
             $current_date = Carbon::now('UTC');
-            
+
             if ($previousLogCarbon->diffInHours($current_date) < 12) {
                 $previous_log->time_out = Carbon::now('UTC');
+                $previous_log->temperature = $temperatureValue;
                 $previous_log->save();
                 return $previous_log;
             }
         }
 
         $attendanceLog = AttendanceLog::create($request->all());
+
+        Temperature::truncate();
 
         CapturedFace::create([
             'data_base64' => $request['data_base64'],

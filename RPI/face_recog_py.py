@@ -189,9 +189,6 @@ while True:
             textFrameWidth = 87
             cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),
                           (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
-            font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, "CAPTURED", (int(fw/2) - textFrameWidth + 6, 35),
-                        font, 1.0, (0, 0, 0), 2)
 
             #get base64 image                
             ret, buffer = cv2.imencode('.jpg', frame)
@@ -202,8 +199,12 @@ while True:
             # print('Executing post request...')
             response = requests.post(api_url + '/api/attendance-log', data={
                                      'app_user_id': name_data[0], 
-                                     'temperature': '0.0c', 
-                                     'data_base64' : decodedbase64text})
+                                     'data_base64' : decodedbase64text}).json()
+
+            
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, response["temperature"], (int(fw/2) - textFrameWidth + 6, 35),
+                        font, 1.0, (0, 0, 0), 2)
 
 
             capture_cd = True
