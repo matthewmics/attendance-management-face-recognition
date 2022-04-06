@@ -82,8 +82,10 @@ class AttendanceLogController extends Controller
 
         $temperature = Temperature::orderBy('created_at', 'desc')->first();
 
-        $temperatureValue = rand(35 * 10, 39 * 10) / 10 . ' C';
+        // $temperatureValue = rand(35 * 10, 39 * 10) / 10 . ' C';
 
+        $temperatureValue = '0.00 C';
+        
         if ($temperature) {
             $temperatureValue = $temperature->temp . ' C';
         }
