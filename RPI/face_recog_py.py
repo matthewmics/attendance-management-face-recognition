@@ -11,6 +11,9 @@ import base64
 import helpers
 import environment
 
+import datetime
+import time
+
 # SET API URL
 api_url = environment.url
 
@@ -189,6 +192,8 @@ while True:
             textFrameWidth = 87
             cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 0),
                           (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
+            cv2.rectangle(frame, (int(fw/2) - textFrameWidth, 80),
+                          (int(fw/2) + textFrameWidth, 50), (5, 255, 5), cv2.FILLED)
 
             #get base64 image                
             ret, buffer = cv2.imencode('.jpg', frame)
@@ -204,6 +209,8 @@ while True:
             
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(frame, response["temperature"], (int(fw/2) - textFrameWidth + 6, 35),
+                        font, 1.0, (0, 0, 0), 2)
+            cv2.putText(frame, time.strftime("%I:%M %p"), (int(fw/2) - textFrameWidth + 6, 70),
                         font, 1.0, (0, 0, 0), 2)
 
 
