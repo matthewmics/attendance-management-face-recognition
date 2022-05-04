@@ -17,6 +17,47 @@ class ReportController extends Controller
 
     private $dateFormat = 'Y-m-d G:i:s';
 
+    public function generateEmployeeReport(Request $request, $userId)
+    {
+        $from = $request['from'];
+        $to = $request['to'];
+
+        $appUser = AppUser::with(['department'])->find($userId);
+        $userLogs = AttendanceLog::selectRaw('(created_at + interval \'8 hour\') as local_created_at, 
+        (time_out + interval \'8 hour\') as local_time_out,
+        *')->whereRaw("
+            (created_at + interval '8 hour')::date BETWEEN '$from' AND '$to' 
+        ")
+            ->where('app_user_id', $userId)->get()->toArray();
+
+
+        $fileName = uniqid();
+        $fileUrl = "../storage/app/$fileName.csv";
+
+        $file = fopen($fileUrl, 'w');
+
+        fputcsv($file, ['Employee: ' . $appUser->name]);
+        fputcsv($file, ['']);
+        fputcsv($file, ["Temperature", "In", "Out"]);
+        foreach ($userLogs as $log) {
+            // fputcsv($file, $csvRec);
+            fputcsv($file, [
+                $log['temperature'],
+                Carbon::parse($log['local_created_at'])->format('D M d, Y H:i a'),
+                $log['time_out'] ? Carbon::parse($log['local_time_out'])->format('D M d, Y H:i a') : '-'
+            ]);
+            // fputcsv($file, [
+            //     $log['temperature'],
+            //     $log['local_created_at'],
+            //     $log['local_time_out']
+            // ]);
+        }
+
+        fclose($file);
+
+        return response()->download($fileUrl)->deleteFileAfterSend(true);
+    }
+
     public function generateGeneralReport(Request $request)
     {
         $from = $request['from'];

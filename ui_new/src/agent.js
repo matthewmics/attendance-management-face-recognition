@@ -84,6 +84,8 @@ const AttendanceLog = {
 
 const Report = {
   generate: (req) => requests.postBlob("/reports/generate", req),
+  employee: (id, req) =>
+    requests.postBlob(`/reports/generate/employees/${id}`, req),
 };
 
 const agent = {

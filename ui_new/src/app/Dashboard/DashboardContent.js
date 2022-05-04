@@ -108,6 +108,15 @@ export const DashboardContent = () => {
 
   const [loadingReport, setLoadingReport] = useState(false);
 
+  const [employees, setEmployees] = useState([
+    {
+      text: "From Department",
+      value: 0,
+    },
+  ]);
+
+  const [selectedEmployee, setSelectedEmployee] = useState(0);
+
   const [departmentData, setDepartmentData] = useState({
     options: [{ value: 0, text: "All" }],
     optionsReport: [],
@@ -188,7 +197,18 @@ export const DashboardContent = () => {
   };
 
   const loadDepartments = async () => {
-    const response = await agent.Department.list();
+    let response = await agent.Employee.list();
+
+    response = response.map((a) => {
+      return {
+        text: a.name,
+        value: a.id,
+      };
+    });
+
+    setEmployees([...employees, ...response]);
+
+    response = await agent.Department.list();
     setDepartmentData({
       selected: 0,
       loading: false,
@@ -260,7 +280,7 @@ export const DashboardContent = () => {
                   />
                 </div>
                 <br></br>
-
+                <div style={{ height: "58px" }}></div>
                 <Button
                   onClick={() => {
                     applyFilter(logsList);
@@ -286,6 +306,7 @@ export const DashboardContent = () => {
                 <div style={InputGroupStyleParent}>
                   <span>Department</span>
                   <Select
+                    disabled={selectedEmployee !== 0}
                     value={departmentData.selectedReport}
                     fluid
                     onChange={(e, data) => {
@@ -295,6 +316,19 @@ export const DashboardContent = () => {
                       });
                     }}
                     options={departmentData.optionsReport}
+                  ></Select>
+                </div>
+                <br></br>
+                <div style={InputGroupStyleParent}>
+                  <span>Employee</span>
+                  <Select
+                    search
+                    value={selectedEmployee}
+                    fluid
+                    onChange={(e, data) => {
+                      setSelectedEmployee(data.value);
+                    }}
+                    options={employees}
                   ></Select>
                 </div>
                 <br></br>
@@ -330,15 +364,36 @@ export const DashboardContent = () => {
                   labelPosition="left"
                   onClick={async () => {
                     setLoadingReport(true);
-                    const response = await agent.Report.generate({
-                      ...filterReport,
-                      department_id: departmentData.selectedReport,
-                    });
+
+                    let response = null;
+
+                    if (selectedEmployee === 0) {
+                      response = await agent.Report.generate({
+                        ...filterReport,
+                        department_id: departmentData.selectedReport,
+                      });
+                    } else {
+                      response = await agent.Report.employee(selectedEmployee, {
+                        ...filterReport,
+                        department_id: departmentData.selectedReport,
+                      });
+                    }
+
+                    let fileName = "";
+
+                    if (selectedEmployee === 0) {
+                      fileName = departmentData.optionsReport.filter(
+                        (a) => a.value === departmentData.selectedReport
+                      )[0].text;
+                    } else {
+                      fileName = employees.find(
+                        (a) => a.value === selectedEmployee
+                      ).text;
+                    }
+
                     saveAs(
                       response,
-                      departmentData.optionsReport.filter(
-                        (a) => a.value === departmentData.selectedReport
-                      )[0].text +
+                      fileName +
                         "_" +
                         filterReport.from +
                         "_to_" +

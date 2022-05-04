@@ -59,15 +59,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/schedules/{id}', [ScheduleController::class, 'setSchedule']);
 
     Route::get('/captured-faces/{id}', [CapturedFaceController::class, 'show']);
-
 });
 
 Route::get('/al-generate', [AttendanceLogController::class, 'generateAttendance']);
 
+Route::post('/reports/generate/employees/{id}', [ReportController::class, 'generateEmployeeReport'])->where(['id' => '[0-9]+']);
 Route::post('/reports/generate', [ReportController::class, 'generateGeneralReport']);
 
 Route::post('/attendance-log', [AttendanceLogController::class, 'store']);
 
 Route::post('/temperatures', [TemperatureController::class, 'store']);
 Route::get('/temperatures', [TemperatureController::class, 'index']);
-
